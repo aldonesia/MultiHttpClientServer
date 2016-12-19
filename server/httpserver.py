@@ -45,8 +45,8 @@ def main():
 					z.write(request_auth[1])
 					z.close()
 					response_content = ''
-					if request_file[1] == '/index.html' or request_file[1] == '/' or request_file[1] == '':
-						t = threading.Thread(target=HtmlResponse(sock,200,"index.html"))
+					if request_file[0] != 'GET' and request_file[0] != 'HEAD' and request_file[0] != 'POST':
+						t = threading.Thread(target=HtmlResponse(sock,500,"500.html"))
 						threads.append(t)
 						t.start()
 					elif request_file[1] == '/a.html':
@@ -62,6 +62,11 @@ def main():
 						t = threading.Thread(target=HtmlResponse(sock,200,"auth.txt"))
 						threads.append(t)
 						t.start()
+					elif request_file[1] == '/index.html' or request_file[1] == '/' or request_file[1] == '':
+						t = threading.Thread(target=HtmlResponse(sock,200,"index.html"))
+						threads.append(t)
+						t.start()
+					
 
 def HtmlResponse(conn_socket, status, file):
 	f = open(file, 'r')
