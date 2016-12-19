@@ -3,6 +3,7 @@ import select
 import sys
 import os
 import threading
+import glob
 
 t_main = None
 threads = []
@@ -52,6 +53,11 @@ def main():
 						t = threading.Thread(target=HtmlResponse(sock,301,"301.html"))
 						threads.append(t)
 						t.start()
+					elif request_access[1] == 'php':
+						for filename in glob.glob('*.php'):
+							t = threading.Thread(target=HtmlResponse(sock,403,"403.html"))
+							threads.append(t)
+							t.start()
 					elif request_name[2] == 'auth':
 						t = threading.Thread(target=HtmlResponse(sock,200,"auth.txt"))
 						threads.append(t)
@@ -69,6 +75,8 @@ def StatusCode(conn_socket,status, filesize, response_content):
 		response_header = 'HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length:'+ str(filesize) + '\r\n\r\n'
 	if (status==301):
 		response_header = 'HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length:'+ str(filesize) + '\r\n\r\n'
+	if (status==403):
+		response_header = 'HTTP/1.1 403 Forbidden\r\nYou don`t have permission to access\r\nContent-Length:' + str(filesize) + '\r\n\r\n'
 	print response_header
 	conn_socket.sendall(response_header + response_content)
 	return
