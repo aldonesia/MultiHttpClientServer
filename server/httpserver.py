@@ -66,6 +66,11 @@ def main():
 						t = threading.Thread(target=HtmlResponse(sock,200,"index.html"))
 						threads.append(t)
 						t.start()
+					else:
+						t = threading.Thread(target=HtmlResponse(sock,404,"404.html"))
+						threads.append(t)
+	 					t.start()
+
 					
 
 def HtmlResponse(conn_socket, status, file):
