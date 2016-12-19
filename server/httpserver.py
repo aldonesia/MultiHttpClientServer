@@ -44,6 +44,10 @@ def main():
 						t = threading.Thread(target=HtmlResponse(sock,200,"index.html"))
 						threads.append(t)
 						t.start()
+					elif request_file[1] == '/a.html':
+						t = threading.Thread(target=HtmlResponse(sock,301,"301.html"))
+						threads.append(t)
+						t.start()
 
 def HtmlResponse(conn_socket, status, file):
 	f = open(file, 'r')
@@ -55,6 +59,8 @@ def HtmlResponse(conn_socket, status, file):
 def StatusCode(conn_socket,status, filesize, response_content):
 	if (status==200):
 		response_header = 'HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length:'+ str(filesize) + '\r\n\r\n'
+	if (status==301):
+		response_header = 'HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length:'+ str(filesize) + '\r\n\r\n'
 	print response_header
 	conn_socket.sendall(response_header + response_content)
 	return
