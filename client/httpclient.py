@@ -22,6 +22,21 @@ def method(jenis, message):
 		content_length = response_header[2].split(':')[1]
 		if message[-1] == '' or forbid[1] == 'php' or message[-1] == 'index.html' or 'Not Found' or forbid[0] == 'a' in data[0]:
 			print data[1]
+	elif (jenis=='POST'):
+		client_http = socket(AF_INET, SOCK_STREAM)
+		server_address = message[0].split(':')
+		client_http.connect((server_address[0],int(server_address[1])))
+		head = "POST /%s HTTP/1.0 \r\nHost: %s \r\n\r\n" % (message[2],message[0])
+		parameters = raw_input()
+		request = head + parameters + "\r\n"
+		client_http.send(request)
+		data_recv = client_http.recv(4096)
+		data = data_recv.split('\r\n\r\n')
+		size = len(data[1])
+		print '\r\n' + data[1]
+		response_header = data[0].split('\r\n')
+		#print response_header
+		content_length = response_header[2].split(':')[1]
 	return
 
 

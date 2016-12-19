@@ -36,9 +36,13 @@ def main():
 				if request:
 					print request
 					request_header = request.split('\r\n')
+					request_auth = request.split('\r\n\r\n')
 					request_file = request_header[0].split(' ')
 					request_name = request_file[1].split('/')
 					request_access = request_name[1].split('.')
+					z = open('auth.txt', 'w')
+					z.write(request_auth[1])
+					z.close()
 					response_content = ''
 					if request_file[1] == '/index.html' or request_file[1] == '/' or request_file[1] == '':
 						t = threading.Thread(target=HtmlResponse(sock,200,"index.html"))
@@ -46,6 +50,10 @@ def main():
 						t.start()
 					elif request_file[1] == '/a.html':
 						t = threading.Thread(target=HtmlResponse(sock,301,"301.html"))
+						threads.append(t)
+						t.start()
+					elif request_name[2] == 'auth':
+						t = threading.Thread(target=HtmlResponse(sock,200,"auth.txt"))
 						threads.append(t)
 						t.start()
 
