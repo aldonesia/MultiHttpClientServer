@@ -87,6 +87,10 @@ def StatusCode(conn_socket,status, filesize, response_content):
 		response_header = 'HTTP/1.1 301 Moved Permanently\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length:'+ str(filesize) + '\r\n\r\n'
 	if (status==403):
 		response_header = 'HTTP/1.1 403 Forbidden\r\nYou don`t have permission to access\r\nContent-Length:' + str(filesize) + '\r\n\r\n'
+	if (status==500):
+		response_header = '500\r\nInternal Server Error\r\nContent-Length:' + str(filesize) + '\r\n\r\n'
+	if (status==404):
+		response_header = 'HTTP/1.1 404 Not Found\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length:' + str(filesize) + '\r\n\r\n'
 	print response_header
 	conn_socket.sendall(response_header + response_content)
 	return
