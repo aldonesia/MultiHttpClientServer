@@ -72,20 +72,6 @@ def main():
 						t = threading.Thread(target=HtmlResponse(sock,200,"auth.txt"))
 						threads.append(t)
 						t.start()
-		 			
-					# elif status:
-					# 	if "html" in path and 'dataset' in f_path:
-					# 		t = threading.Thread(target=html_response(sock,200,"index.html"))
-					# 		threads.append(t)
-					# 		t.start()
-						# elif 'dataset' in f_path:
-						# 	t = threading.Thread(download_response(sock, f_path))
-						# 	threads.append(t)
-						# 	t.start()
-						# else:
-						# 	t = threading.Thread(target=HtmlResponse(sock,403,"403.html"))
-						# 	threads.append(t)
-						# 	t.start()
 					else:
 						t = threading.Thread(target=HtmlResponse(sock,404,"404.html"))
 						threads.append(t)
