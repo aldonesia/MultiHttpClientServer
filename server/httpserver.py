@@ -45,12 +45,18 @@ def main():
 					z.write(request_auth[1])
 					z.close()
 					response_content = ''
+					print request_file[2]
 					if request_file[0] != 'GET' and request_file[0] != 'HEAD' and request_file[0] != 'POST':
 						t = threading.Thread(target=HtmlResponse(sock,500,"500.html"))
 						threads.append(t)
 						t.start()
 					elif request_file[1] == '/a.html':
 						t = threading.Thread(target=HtmlResponse(sock,301,"301.html"))
+						threads.append(t)
+						t.start()
+					elif "/dataset/" == request_file[1] or "/dataset" == request_file[1]:
+						path = "./dataset"
+						t = threading.Thread(target=DirList(sock,path))
 						threads.append(t)
 						t.start()
 					elif request_access[1] == 'php':
@@ -66,11 +72,24 @@ def main():
 						t = threading.Thread(target=HtmlResponse(sock,200,"index.html"))
 						threads.append(t)
 						t.start()
+		 			
+					# elif status:
+					# 	if "html" in path and 'dataset' in f_path:
+					# 		t = threading.Thread(target=html_response(sock,200,"index.html"))
+					# 		threads.append(t)
+					# 		t.start()
+						# elif 'dataset' in f_path:
+						# 	t = threading.Thread(download_response(sock, f_path))
+						# 	threads.append(t)
+						# 	t.start()
+						# else:
+						# 	t = threading.Thread(target=HtmlResponse(sock,403,"403.html"))
+						# 	threads.append(t)
+						# 	t.start()
 					else:
 						t = threading.Thread(target=HtmlResponse(sock,404,"404.html"))
 						threads.append(t)
 	 					t.start()
-
 					
 
 def HtmlResponse(conn_socket, status, file):
@@ -79,7 +98,17 @@ def HtmlResponse(conn_socket, status, file):
 	f.close()
 	content_length = len(response_content)
 	return StatusCode(conn_socket, status, content_length, response_content)
-	
+
+def DirList(conn_socket, path):
+	directoryList = os.listdir(path)
+	halo = []
+	for d in directoryList:
+		halo.append('<a href="dataset/'+format(d)+'">'+format(d)+'</a>')
+	response_content = "<br>".join(halo)
+	print response_content
+	content_length = len(response_content)
+	return StatusCode(conn_socket, 200, content_length, response_content)
+
 def StatusCode(conn_socket,status, filesize, response_content):
 	if (status==200):
 		response_header = 'HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length:'+ str(filesize) + '\r\n\r\n'
@@ -92,6 +121,7 @@ def StatusCode(conn_socket,status, filesize, response_content):
 	if (status==404):
 		response_header = 'HTTP/1.1 404 Not Found\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length:' + str(filesize) + '\r\n\r\n'
 	print response_header
+	print response_content
 	conn_socket.sendall(response_header + response_content)
 	return
 

@@ -19,8 +19,11 @@ def method(jenis, message):
 		response_header = data[0].split('\r\n')
 		print response_header
 		print data[0]
+		print message[-1]
 		content_length = response_header[2].split(':')[1]
-		if message[-1] == '' or forbid[1] == 'php' or message[-1] == 'index.html' or 'Not Found' or forbid[0] == 'a' in data[0]:
+		if message[-1] == 'dataset':
+			print data[1]
+		elif message[-1] == '' or forbid[1] == 'php' or message[-1] == 'index.html' or 'Not Found' or forbid[0] == 'a' in data[0]:
 			print data[1]
 	elif (jenis=='HEAD'):
 		client_http = socket(AF_INET, SOCK_STREAM)
